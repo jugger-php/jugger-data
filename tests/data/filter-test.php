@@ -55,7 +55,7 @@ class FilterTest extends TestCase
 
         $col = $filters['col8'][0];
         $this->assertEquals($col[0], '%');
-        $this->assertEquals($col[1], '%gs%');
+        $this->assertEquals($col[1], 'gs');
     }
 
     public function testMany()
