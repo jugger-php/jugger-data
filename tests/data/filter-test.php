@@ -19,7 +19,7 @@ class FilterTest extends TestCase
             return intval($value) > 5;
         });
         $filter->add('@col7', [1,2,3]);
-        $filter->add('%col8', '%gs%');
+        $filter->add('%col8', 'gs');
 
         $filters = $filter->getFilters();
 
