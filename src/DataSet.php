@@ -69,7 +69,7 @@ abstract class DataSet
      * общее количество элементов
      * @return integer
      */
-    public function getCountTotal()
+    public function getTotalCount()
     {
         return count($this->dataAll);
     }
@@ -78,7 +78,7 @@ abstract class DataSet
      */
     protected function prepareData()
     {
-        $data = $this->dataAll();
+        $data = $this->dataAll;
 
         if ($this->filter) {
             $data = $this->filter($this->filter, $data);
