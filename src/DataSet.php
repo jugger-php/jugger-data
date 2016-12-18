@@ -80,12 +80,12 @@ abstract class DataSet
     {
         $data = $this->dataAll();
 
-        if ($this->sorter) {
-            $data = $this->sort($this->sorter, $data);
-        }
-
         if ($this->filter) {
             $data = $this->filter($this->filter, $data);
+        }
+
+        if ($this->sorter) {
+            $data = $this->sort($this->sorter, $data);
         }
 
         if ($this->paginator) {
