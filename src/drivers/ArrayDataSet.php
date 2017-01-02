@@ -12,7 +12,7 @@ use jugger\data\Paginator;
  */
 class ArrayDataSet extends DataSet
 {
-    protected function filter(Filter $filter, array $data)
+    protected function filter(Filter $filter, $data)
     {
         $filters = $filter->getFilters();
 
@@ -64,7 +64,7 @@ class ArrayDataSet extends DataSet
         return $ret;
     }
 
-    protected function division(Paginator $paginator, array $data)
+    protected function division(Paginator $paginator, $data)
     {
         $offset = $paginator->getOffset();
         $limit = $paginator->getPageSize();
@@ -72,12 +72,12 @@ class ArrayDataSet extends DataSet
         return array_slice($data, $offset, $limit);
     }
 
-    protected function sort(Sorter $sorter, array $data)
+    protected function sort(Sorter $sorter, $data)
     {
         $columns = $sorter->getColumns();
         usort($data, function($a, $b) use($columns) {
             $ret = 0;
-            foreach ($this->columns as $column => $sort) {
+            foreach ($columns as $column => $sort) {
                 $ret = $this->sortOperation($sort, $a[$column], $b[$column]);
                 if ($ret != 0) {
                     break;
@@ -95,16 +95,16 @@ class ArrayDataSet extends DataSet
         if (is_callable($sort)) {
             $ret = call_user_func_array($sort, [$a, $b]);
         }
-        elseif ($sort === self::ASC) {
+        elseif ($sort === Sorter::ASC) {
             $ret = strcmp($a, $b);
         }
-        elseif ($sort === self::ASC_NAT) {
+        elseif ($sort === Sorter::ASC_NAT) {
             $ret = strnatcmp($a, $b);
         }
-        elseif ($sort === self::DESC) {
+        elseif ($sort === Sorter::DESC) {
             $ret = -strcmp($a, $b);
         }
-        elseif ($sort === self::DESC_NAT) {
+        elseif ($sort === Sorter::DESC_NAT) {
             $ret = -strnatcmp($a, $b);
         }
         return $ret;
