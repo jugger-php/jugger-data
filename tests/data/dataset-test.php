@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 use jugger\data\Filter;
 use jugger\data\Sorter;
 use jugger\data\Paginator;
-use jugger\data\ArrayDataSet;
+use jugger\data\drivers\ArrayDataSet;
 
 class DatasetTest extends TestCase
 {
@@ -43,29 +43,49 @@ class DatasetTest extends TestCase
         $data = $this->getData();
         $dataset = new ArrayDataSet($data);
         $dataset->sorter = new Sorter([
-            0 => Sorter::ASC,
             1 => Sorter::DESC_NAT,
+            0 => Sorter::ASC,
             2 => function($a, $b) {
                 return 0;
             },
         ]);
-        $rows = $dataset->getRows();
+        $rows = $dataset->getData();
+
+        $this->assertEquals($rows[0][0], 9);
+        $this->assertEquals($rows[1][0], 4);
+        $this->assertEquals($rows[2][0], 8);
+        $this->assertEquals($rows[3][0], 3);
+        $this->assertEquals($rows[4][0], 7);
+        $this->assertEquals($rows[5][0], 2);
+        $this->assertEquals($rows[6][0], 6);
+        $this->assertEquals($rows[7][0], 1);
+        $this->assertEquals($rows[8][0], 5);
     }
 
     public function testFilter()
     {
         $data = $this->getData();
         $dataset = new ArrayDataSet($data);
-        $dataset->filter = new Filter();
-        $rows = $dataset->getRows();
+        $dataset->filter = new Filter([
+            '>0' => 5,
+            '@1' => ['name1', 'name2', 'name3'],
+            '=2' => 789
+        ]);
+        $rows = $dataset->getData();
+
+        $this->assertEquals(count($rows), 1);
+        $this->assertEquals($rows[5][0], 6);
     }
 
     public function testPager()
     {
         $data = $this->getData();
         $dataset = new ArrayDataSet($data);
-        $dataset->pager = new Pager(2, 1);
-        $rows = $dataset->getRows();
+        $dataset->pager = new Paginator(3, 2);
+        $rows = $dataset->getData();
 
+        $this->assertEquals($rows[3][0], 4);
+        $this->assertEquals($rows[4][0], 5);
+        $this->assertEquals($rows[5][0], 6);
     }
 }
