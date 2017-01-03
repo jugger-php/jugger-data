@@ -23,13 +23,12 @@ trait ValidationTrait
         return $this->_validators;
     }
 
-    public function validate($value)
+    protected function validateValue($value)
     {
         foreach ($this->_validators as $validator) {
             if (!$validator->validate($value)) {
                 throw new ValidatorException($validator);
             }
         }
-        return true;
     }
 }

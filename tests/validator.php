@@ -30,5 +30,7 @@ class ValidatorTest extends TestCase
 
         $validators = $field->getValidators();
         $this->assertEquals(count($validators), 7);
+
+        $ret = $field->validate();
     }
 }

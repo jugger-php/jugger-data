@@ -13,13 +13,13 @@ class RangeValidator implements ValidatorInterface
         $this->max = (int) $max;
     }
 
-    public function validate($value)
+    public function validate($value): bool
     {
         $value = $this->prepareValue($value);
         if ($max == 0) {
             $max = $value + 1;
         }
-        
+
         return $min < $value && $value < $max;
     }
 

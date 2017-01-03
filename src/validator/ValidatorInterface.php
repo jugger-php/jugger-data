@@ -4,5 +4,5 @@ namespace jugger\data\validator;
 
 interface ValidatorInterface
 {
-    public function validate($value);
+    public function validate($value): bool;
 }

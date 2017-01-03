@@ -13,7 +13,7 @@ class CompareValidator implements ValidatorInterface
         $this->compareValue = $compareValue;
     }
 
-    public function validate($a)
+    public function validate($a): bool
     {
         $b = $this->compareValue;
         switch ($this->operator) {

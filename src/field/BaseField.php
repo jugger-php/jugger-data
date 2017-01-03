@@ -59,7 +59,7 @@ abstract class BaseField
 
     public function validate()
     {
-        return parent::validate($this->getValue());
+        $this->validateValue($this->getValue());
     }
 
     abstract protected function prepareValue($value);
