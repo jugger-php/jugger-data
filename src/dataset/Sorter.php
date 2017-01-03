@@ -1,6 +1,6 @@
 <?php
 
-namespace jugger\data;
+namespace jugger\data\dataset;
 
 /**
  * сортировщик

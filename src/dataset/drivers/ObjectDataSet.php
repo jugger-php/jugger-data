@@ -1,6 +1,6 @@
 <?php
 
-namespace jugger\data\drivers;
+namespace jugger\data\dataset\drivers;
 
 /**
  * Набор данных для массива

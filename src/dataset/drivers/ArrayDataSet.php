@@ -1,11 +1,11 @@
 <?php
 
-namespace jugger\data\drivers;
+namespace jugger\data\dataset\drivers;
 
-use jugger\data\Filter;
-use jugger\data\Sorter;
-use jugger\data\DataSet;
-use jugger\data\Paginator;
+use jugger\data\dataset\Filter;
+use jugger\data\dataset\Sorter;
+use jugger\data\dataset\DataSet;
+use jugger\data\dataset\Paginator;
 
 /**
  * Набор данных для массива
