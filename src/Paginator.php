@@ -52,6 +52,10 @@ class Paginator
 
     public function getPageMax()
     {
+        if (!$this->totalCount) {
+            throw new \Exception("Property 'totalCount' is required");
+        }
+
         $t = (int) $this->totalCount;
         $ps = $this->getPageSize();
 
