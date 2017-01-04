@@ -35,7 +35,7 @@ class RangeValidator implements ValidatorInterface
             $value = (float) $value;
         }
         else {
-            $value = strlen((string) $value);
+            $value = mb_strlen((string) $value);
         }
         return $value;
     }
