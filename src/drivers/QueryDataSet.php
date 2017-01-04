@@ -2,6 +2,8 @@
 
 namespace jugger\data\drivers;
 
+use jugger\db\Query;
+
 /**
  * Набор данных для объекта запроса
  */
@@ -9,104 +11,44 @@ class QueryDataSet extends ArrayDataSet
 {
     protected function prepareData()
     {
-        return parent::prepareData()->all();
+        $query = parent::prepareData();
+        return $query->all();
     }
 
-    protected function filter(Filter $filter, $data)
+    protected function filter(Filter $filter, $query)
     {
         $filters = $filter->getFilters();
+        foreach ($filters as $column => $data) {
+            list($operator, $value) = $data;
+            $query->andWhere([
+                $operator.$column => $value
+            ]);
+        }
+        return $query;
+    }
 
-        return array_filter($data, function($item) use($filters) {
-            foreach ($filters as $column => $columnFilters) {
-                $value = $item[$column];
-                foreach ($columnFilters as $data) {
-                    $operator = $data[0];
-                    $etalon = $data[1];
+    protected function division(Paginator $paginator, $query)
+    {
+        $query->offset($paginator->getOffset());
+        $query->limit($paginator->getPageSize());
+        return $query;
+    }
 
-                    if (!$this->filterOperation($operator, $value, $etalon)) {
-                        return false;
-                    }
-                }
+    protected function sort(Sorter $sorter, $query)
+    {
+        $orders = [];
+        $sorters = $sorter->getColumns();
+        $ascSort = [Sorter::ASC, Sorter::ASC_NAT];
+        $descSort = [Sorter::DESC, Sorter::DESC_NAT];
+
+        foreach ($sorters as $column => $sort) {
+            if (in_array($sort, $ascSort)) {
+                $orders[$column] = 'ASC';
             }
-            return true;
-        });
-    }
-
-    protected function filterOperation($operator, $a, $b)
-    {
-        $ret = true;
-        switch ($operator) {
-            case '=':
-                $ret = $a == $b;
-                break;
-            case '!':
-                $ret = $a != $b;
-                break;
-            case '@':
-                $ret = in_array($a, $b);
-                break;
-            case '%':
-                $ret = strpos($a, $b);
-                break;
-            case '>':
-                $ret = $a > $b;
-                break;
-            case '>=':
-                $ret = $a >= $b;
-                break;
-            case '<':
-                $ret = $a < $b;
-                break;
-            case '<=':
-                $ret = $a <= $b;
-                break;
-        }
-        return $ret;
-    }
-
-    protected function division(Paginator $paginator, $data)
-    {
-        $offset = $paginator->getOffset();
-        $limit = $paginator->getPageSize();
-
-        return array_slice($data, $offset, $limit);
-    }
-
-    protected function sort(Sorter $sorter, $data)
-    {
-        $columns = $sorter->getColumns();
-        usort($data, function($a, $b) use($columns) {
-            $ret = 0;
-            foreach ($columns as $column => $sort) {
-                $ret = $this->sortOperation($sort, $a[$column], $b[$column]);
-                if ($ret != 0) {
-                    break;
-                }
+            elseif (in_array($sort, $descSort)) {
+                $orders[$column] = 'DESC';
             }
-            return $ret;
-        });
-
-        return $data;
-    }
-
-    public function sortOperation($sort, $a, $b)
-    {
-        $ret = 0;
-        if (is_callable($sort)) {
-            $ret = call_user_func_array($sort, [$a, $b]);
         }
-        elseif ($sort === Sorter::ASC) {
-            $ret = strcmp($a, $b);
-        }
-        elseif ($sort === Sorter::ASC_NAT) {
-            $ret = strnatcmp($a, $b);
-        }
-        elseif ($sort === Sorter::DESC) {
-            $ret = -strcmp($a, $b);
-        }
-        elseif ($sort === Sorter::DESC_NAT) {
-            $ret = -strnatcmp($a, $b);
-        }
-        return $ret;
+        return $query->orderBy($orders);
     }
 }
