@@ -6,6 +6,6 @@ class RequireValidator implements ValidatorInterface
 {
     public function validate($value): bool
     {
-        return ! empty($value);
+        return ! is_null($value);
     }
 }

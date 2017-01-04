@@ -20,7 +20,7 @@ class CompareValidator implements ValidatorInterface
             case '==':
                 return $a == $b;
             case '===':
-                return $a == $b;
+                return $a === $b;
             case '!=':
                 return $a != $b;
             case '!==':
@@ -33,8 +33,6 @@ class CompareValidator implements ValidatorInterface
                 return $a < $b;
             case '<=':
                 return $a <= $b;
-            case '<=>':
-                return $a <=> $b;
             default:
                 throw new \Exception("Invalide operator is '{$this->operator}'");
         }

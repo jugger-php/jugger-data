@@ -4,6 +4,7 @@ namespace jugger\data\validator;
 
 trait ValidationTrait
 {
+    protected $_error;
     protected $_validators;
 
     public function addValidator(ValidatorInterface $validator)
@@ -18,6 +19,11 @@ trait ValidationTrait
         }
     }
 
+    public function getError()
+    {
+        return $this->_error;
+    }
+
     public function getValidators()
     {
         return $this->_validators;
@@ -25,10 +31,13 @@ trait ValidationTrait
 
     protected function validateValue($value)
     {
+        $this->_error = null;
         foreach ($this->_validators as $validator) {
             if (!$validator->validate($value)) {
-                throw new ValidatorException($validator);
+                $this->_error = get_class($validator);
+                return false;
             }
         }
+        return true;
     }
 }

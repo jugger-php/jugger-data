@@ -13,6 +13,6 @@ class RegexpValidator implements ValidatorInterface
 
     public function validate($value): bool
     {
-        return preg_match($this->pattern, $value) !== false;
+        return !empty($value) && preg_match($this->pattern, $value) >= 1;
     }
 }

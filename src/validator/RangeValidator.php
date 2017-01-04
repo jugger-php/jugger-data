@@ -15,20 +15,23 @@ class RangeValidator implements ValidatorInterface
 
     public function validate($value): bool
     {
-        $value = $this->prepareValue($value);
+        $max = $this->max;
+        $length = $this->getLength($value);
         if ($max == 0) {
-            $max = $value + 1;
+            $max = $length + 1;
         }
-
-        return $min < $value && $value < $max;
+        return $this->min < $length && $length < $max;
     }
 
-    protected function prepareValue($value)
+    protected function getLength($value)
     {
-        if (!is_scalar($value)) {
+        if (is_null($value)) {
+            $value = 0;
+        }
+        elseif (!is_scalar($value)) {
             throw new \Exception("How should I do it?");
         }
-        elseif (is_numeric($value)) {
+        elseif (is_float($value) || is_int($value)) {
             $value = (float) $value;
         }
         else {
