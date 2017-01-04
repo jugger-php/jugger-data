@@ -13,28 +13,32 @@ abstract class BaseField
 
     public function __construct(array $config = [])
     {
-        // set name
-        $name = $config['name'] ?? null;
-        if (!is_string($name)) {
-            throw new \Exception("Property 'name' is required");
-        }
-        else {
-            $this->_name = $name;
-            unset($config['name']);
-        }
-        // set default
-        $value = $config['value'] ?? null;
-        if ($value) {
-            $this->setValue($value);
-            unset($config['value']);
-        }
-        // init
+        $this->initName($config['name'] ?? null);
+        $this->setValue($config['value'] ?? null);
+        $this->initValidators($config['validators'] ?? []);
         $this->init($config);
     }
 
     public function init(array $config)
     {
         // pass
+    }
+
+    public function initName($name)
+    {
+        if (is_string($name) && !empty($name)) {
+            $this->_name = $name;
+        }
+        else {
+            throw new \Exception("Property 'name' is required");
+        }
+    }
+
+    protected function initValidators(array $validators)
+    {
+        foreach ($validators as $validator) {
+            $this->addValidator($validator);
+        }
     }
 
     public function setValue($value)
