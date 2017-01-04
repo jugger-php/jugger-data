@@ -12,6 +12,17 @@ use jugger\data\Paginator;
  */
 class ArrayDataSet extends DataSet
 {
+    protected function getInternalTotalCount($data)
+    {
+        return count($data);
+    }
+
+    protected function prepareData()
+    {
+        // сбрасываем ключи
+        return array_values(parent::prepareData());
+    }
+
     protected function filter(Filter $filter, $data)
     {
         $filters = $filter->getFilters();
