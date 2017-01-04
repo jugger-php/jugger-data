@@ -40,6 +40,11 @@ abstract class DataSet
      */
     public $filter;
     /**
+     * общие количество записей с учетом фильтрации
+     * @var int
+     */
+    private $_totalCount;
+    /**
      * конструктор
      * @param mixed $data
      */
@@ -48,9 +53,9 @@ abstract class DataSet
         $this->dataAll = $data;
     }
     /**
-     * возвращает подготовленные данные
+     * подготовленные данные
      */
-    public function getData()
+    public function getData(): array
     {
         if (!$this->data) {
             $this->data = $this->prepareData();
@@ -58,7 +63,7 @@ abstract class DataSet
         return $this->data;
     }
     /**
-     * кол-во элементов среза
+     * кол-во элементов на текущей странице
      * @return integer
      */
     public function getCount()
@@ -66,12 +71,17 @@ abstract class DataSet
         return count($this->getData());
     }
     /**
+     * количества записей после фильтрации
+     * @param  mixed $data данные после фильтрации
+     */
+    abstract protected function getInternalTotalCount($data);
+    /**
      * общее количество элементов
      * @return integer
      */
-    public function getTotalCount()
+    public function getTotalCount(): int
     {
-        return count($this->dataAll);
+        return $this->_totalCount;
     }
     /**
      * формирует данные
@@ -80,13 +90,15 @@ abstract class DataSet
     {
         $data = $this->dataAll;
 
+        if ($this->sorter) {
+            $data = $this->sort($this->sorter, $data);
+        }
+
         if ($this->filter) {
             $data = $this->filter($this->filter, $data);
         }
 
-        if ($this->sorter) {
-            $data = $this->sort($this->sorter, $data);
-        }
+        $this->_totalCount = $this->getInternalTotalCount($data);
 
         if ($this->paginator) {
             $this->paginator->totalCount = $this->getTotalCount();
