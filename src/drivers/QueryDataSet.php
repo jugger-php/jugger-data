@@ -3,26 +3,38 @@
 namespace jugger\data\drivers;
 
 use jugger\db\Query;
+use jugger\data\Filter;
+use jugger\data\Sorter;
+use jugger\data\DataSet;
+use jugger\data\Paginator;
 
 /**
  * Набор данных для объекта запроса
  */
-class QueryDataSet extends ArrayDataSet
+class QueryDataSet extends DataSet
 {
+    protected function getInternalTotalCount($data)
+    {
+        $query = clone $data;
+        $row = $query->select('COUNT(*) AS `cnt`')->one();
+        return (int) $row['cnt'];
+    }
+
     protected function prepareData()
     {
-        $query = parent::prepareData();
-        return $query->all();
+        return parent::prepareData()->all();
     }
 
     protected function filter(Filter $filter, $query)
     {
         $filters = $filter->getFilters();
-        foreach ($filters as $column => $data) {
-            list($operator, $value) = $data;
-            $query->andWhere([
-                $operator.$column => $value
-            ]);
+        foreach ($filters as $column => $conditions) {
+            foreach ($conditions as $condition) {
+                list($operator, $value) = $condition;
+                $query->andWhere([
+                    $operator.$column => $value
+                ]);
+            }
         }
         return $query;
     }
@@ -42,7 +54,10 @@ class QueryDataSet extends ArrayDataSet
         $descSort = [Sorter::DESC, Sorter::DESC_NAT];
 
         foreach ($sorters as $column => $sort) {
-            if (in_array($sort, $ascSort)) {
+            if (!is_scalar($sort)) {
+                continue;
+            }
+            elseif (in_array($sort, $ascSort)) {
                 $orders[$column] = 'ASC';
             }
             elseif (in_array($sort, $descSort)) {
