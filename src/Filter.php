@@ -1,6 +1,6 @@
 <?php
 
-namespace jugger\data\dataset;
+namespace jugger\data;
 
 /**
  * фильтр
@@ -33,7 +33,7 @@ class Filter
 
     protected function parseColumnName($columnName)
     {
-        $re = '/^((?:>=|<=)|(?:=|!|@|%|<|>))(.+)$/';
+        $re = '/^((?:>=|<=|=|!|@|%|<|>))(.+)$/';
         if (preg_match($re, $columnName, $m) === 1) {
             return [$m[2], $m[1]];
         }

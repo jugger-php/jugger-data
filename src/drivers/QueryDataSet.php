@@ -1,17 +1,17 @@
 <?php
 
-namespace jugger\data\dataset\drivers;
-
-use jugger\data\dataset\Filter;
-use jugger\data\dataset\Sorter;
-use jugger\data\dataset\DataSet;
-use jugger\data\dataset\Paginator;
+namespace jugger\data\drivers;
 
 /**
- * Набор данных для массива
+ * Набор данных для объекта запроса
  */
-class ArrayDataSet extends DataSet
+class QueryDataSet extends ArrayDataSet
 {
+    protected function prepareData()
+    {
+        return parent::prepareData()->all();
+    }
+
     protected function filter(Filter $filter, $data)
     {
         $filters = $filter->getFilters();

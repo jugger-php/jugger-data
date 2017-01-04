@@ -2,10 +2,10 @@
 
 use PHPUnit\Framework\TestCase;
 
-use jugger\data\dataset\Filter;
-use jugger\data\dataset\Sorter;
-use jugger\data\dataset\Paginator;
-use jugger\data\dataset\drivers\ArrayDataSet;
+use jugger\data\Filter;
+use jugger\data\Sorter;
+use jugger\data\Paginator;
+use jugger\data\drivers\ArrayDataSet;
 
 class DatasetTest extends TestCase
 {

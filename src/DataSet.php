@@ -1,6 +1,6 @@
 <?php
 
-namespace jugger\data\dataset;
+namespace jugger\data;
 
 /**
  * Набор данных

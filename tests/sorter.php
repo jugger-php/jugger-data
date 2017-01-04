@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-use jugger\data\dataset\Sorter;
+use jugger\data\Sorter;
 
 class SorterTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-use jugger\data\dataset\Paginator;
+use jugger\data\Paginator;
 
 class PaginatorTest extends TestCase
 {

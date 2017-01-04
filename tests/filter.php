@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-use jugger\data\dataset\Filter;
+use jugger\data\Filter;
 
 class FilterTest extends TestCase
 {
