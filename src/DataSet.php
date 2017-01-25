@@ -34,12 +34,6 @@ abstract class DataSet
      */
     public $paginator;
     /**
-     * фильтр
-     * хранит в себе данные об отборе данных
-     * @var Filter
-     */
-    public $filter;
-    /**
      * общие количество записей с учетом фильтрации
      * @var int
      */
@@ -94,10 +88,6 @@ abstract class DataSet
             $data = $this->sort($this->sorter, $data);
         }
 
-        if ($this->filter) {
-            $data = $this->filter($this->filter, $data);
-        }
-
         $this->_totalCount = $this->getInternalTotalCount($data);
 
         if ($this->paginator) {
@@ -114,13 +104,6 @@ abstract class DataSet
      * @return mixed            отсортированные данные
      */
     abstract protected function sort(Sorter $sorter, $data);
-    /**
-     * Фильтрует данные
-     * @param  Filter   $filter объект фильтра
-     * @param  mixed    $data   данные
-     * @return mixed            отсортированные данные
-     */
-    abstract protected function filter(Filter $filter, $data);
     /**
      * Разбивает данные на страницы
      * @param  Paginator    $paginator  объект пагинатора

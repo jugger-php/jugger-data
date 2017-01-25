@@ -2,7 +2,6 @@
 
 namespace jugger\data\drivers;
 
-use jugger\data\Filter;
 use jugger\data\Sorter;
 use jugger\data\DataSet;
 use jugger\data\Paginator;
@@ -21,58 +20,6 @@ class ArrayDataSet extends DataSet
     {
         // сбрасываем ключи
         return array_values(parent::prepareData());
-    }
-
-    protected function filter(Filter $filter, $data)
-    {
-        $filters = $filter->getFilters();
-
-        return array_filter($data, function($item) use($filters) {
-            foreach ($filters as $column => $columnFilters) {
-                $value = $item[$column];
-                foreach ($columnFilters as $data) {
-                    $operator = $data[0];
-                    $etalon = $data[1];
-
-                    if (!$this->filterOperation($operator, $value, $etalon)) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        });
-    }
-
-    protected function filterOperation($operator, $a, $b)
-    {
-        $ret = true;
-        switch ($operator) {
-            case '=':
-                $ret = $a == $b;
-                break;
-            case '!':
-                $ret = $a != $b;
-                break;
-            case '@':
-                $ret = in_array($a, $b);
-                break;
-            case '%':
-                $ret = strpos($a, $b);
-                break;
-            case '>':
-                $ret = $a > $b;
-                break;
-            case '>=':
-                $ret = $a >= $b;
-                break;
-            case '<':
-                $ret = $a < $b;
-                break;
-            case '<=':
-                $ret = $a <= $b;
-                break;
-        }
-        return $ret;
     }
 
     protected function division(Paginator $paginator, $data)

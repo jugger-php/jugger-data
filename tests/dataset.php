@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 
-use jugger\data\Filter;
 use jugger\data\Sorter;
 use jugger\data\Paginator;
 use jugger\data\drivers\ArrayDataSet;
@@ -73,22 +72,6 @@ class DatasetTest extends TestCase
         $this->assertEquals($rows[6]['id'], 6);
         $this->assertEquals($rows[7]['id'], 1);
         $this->assertEquals($rows[8]['id'], 5);
-    }
-
-    /**
-     * @dataProvider dataSetProvider
-     */
-    public function testFilter($data, $dataset)
-    {
-        $dataset->filter = new Filter([
-            '>id' => 5,
-            '@name' => ['name1', 'name2', 'name3'],
-            '=number' => 789
-        ]);
-        $rows = $dataset->getData();
-
-        $this->assertEquals(count($rows), 1);
-        $this->assertEquals($rows[0]['id'], 6);
     }
 
     /**

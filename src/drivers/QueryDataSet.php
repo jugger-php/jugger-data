@@ -3,7 +3,6 @@
 namespace jugger\data\drivers;
 
 use jugger\db\Query;
-use jugger\data\Filter;
 use jugger\data\Sorter;
 use jugger\data\DataSet;
 use jugger\data\Paginator;
@@ -23,20 +22,6 @@ class QueryDataSet extends DataSet
     protected function prepareData()
     {
         return parent::prepareData()->all();
-    }
-
-    protected function filter(Filter $filter, $query)
-    {
-        $filters = $filter->getFilters();
-        foreach ($filters as $column => $conditions) {
-            foreach ($conditions as $condition) {
-                list($operator, $value) = $condition;
-                $query->andWhere([
-                    $operator.$column => $value
-                ]);
-            }
-        }
-        return $query;
     }
 
     protected function division(Paginator $paginator, $query)
