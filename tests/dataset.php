@@ -4,9 +4,9 @@ use PHPUnit\Framework\TestCase;
 
 use jugger\data\Sorter;
 use jugger\data\Paginator;
-use jugger\data\drivers\ArrayDataSet;
-use jugger\data\drivers\QueryDataSet;
-use jugger\data\drivers\ObjectDataSet;
+use jugger\data\driver\ArrayDataSet;
+use jugger\data\driver\QueryDataSet;
+use jugger\data\driver\ObjectDataSet;
 
 use jugger\db\Query;
 use jugger\db\driver\MysqliConnection;
