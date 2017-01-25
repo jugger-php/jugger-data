@@ -50,6 +50,10 @@ class PaginatorTest extends TestCase
         $this->assertEquals($pager->getOffset(), 0);
         $this->assertEquals($pager->getPageMax(), 1);
 
+        $pager->totalCount = 51;
+        $this->assertEquals($pager->getOffset(), 0);
+        $this->assertEquals($pager->getPageMax(), 6);
+
         $pager->totalCount = 100;
         $this->assertEquals($pager->getOffset(), 0);
         $this->assertEquals($pager->getPageMax(), 10);
