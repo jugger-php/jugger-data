@@ -2,113 +2,94 @@
 
 namespace jugger\data;
 
-/**
- * Набор данных
- * Позволяет проводить над данными операции:
- * - сортировки
- * - пагинации
- * - фильтрации
- */
+use jugger\criteria\Criteria;
+
 abstract class DataSet
 {
-    /*
-     * все данные
-     * @var mixed
-     */
-    protected $dataAll;
-    /**
-     * выходные данные, сформированные в соответствии с пагинатором и сортировщиком
-     * @var mixed
-     */
-    private $data;
-    /**
-     * сортировщик
-     * хранит в себе информацию о сортируемых столбцах и способах их сортировки
-     * @var Sorter
-     */
-    public $sorter;
-    /**
-     * пагинатор
-     * хранит в себе информацию о разбивке данных на страницы
-     * @var Paginator
-     */
-    public $paginator;
-    /**
-     * общие количество записей с учетом фильтрации
-     * @var int
-     */
-    private $_totalCount;
-    /**
-     * конструктор
-     * @param mixed $data
-     */
+    protected $data;
+    protected $sorter;
+    protected $criteria;
+    protected $paginator;
+
     public function __construct($data)
     {
-        $this->dataAll = $data;
+        $this->data = $data;
+        $this->init();
     }
-    /**
-     * подготовленные данные
-     */
+
+    protected function init()
+    {
+
+    }
+
     public function getData(): array
     {
-        if (!$this->data) {
-            $this->data = $this->prepareData();
-        }
-        return $this->data;
+        return $this->prepareData();
     }
-    /**
-     * кол-во элементов на текущей странице
-     * @return integer
-     */
-    public function getCount()
+
+    public function getCount(): int
     {
         return count($this->getData());
     }
-    /**
-     * количества записей после фильтрации
-     * @param  mixed $data данные после фильтрации
-     */
-    abstract protected function getInternalTotalCount($data);
-    /**
-     * общее количество элементов
-     * @return integer
-     */
-    public function getTotalCount(): int
+
+    public function setCriteria(Criteria $value)
     {
-        return $this->_totalCount;
+        $this->criteria = $value;
     }
-    /**
-     * формирует данные
-     */
+
+    public function getCriteria(): ?Criteria
+    {
+        return $this->criteria;
+    }
+
+    public function setPaginator(Paginator $value)
+    {
+        $this->paginator = $value;
+    }
+
+    public function getPaginator(): ?Paginator
+    {
+        return $this->paginator;
+    }
+
+    public function setPaginatorPageSize(int $pageSize)
+    {
+        $totalCount = $this->getTotalCount();
+        $this->setPaginator(
+            new Paginator($pageSize, $totalCount)
+        );
+    }
+
+    public function setSorter(Sorter $value)
+    {
+        $this->sorter = $value;
+    }
+
+    public function getSorter(): ?Sorter
+    {
+        return $this->sorter;
+    }
+
     protected function prepareData()
     {
-        $data = $this->dataAll;
-
+        $data = $this->data;
+        if ($this->criteria) {
+            $data = $this->filter($data);
+        }
         if ($this->sorter) {
-            $data = $this->sort($this->sorter, $data);
+            $data = $this->sort($data);
         }
-
-        $this->_totalCount = $this->getInternalTotalCount($data);
-
         if ($this->paginator) {
-            $this->paginator->totalCount = $this->getTotalCount();
-            $data = $this->division($this->paginator, $data);
+            $data = $this->division($data);
         }
-
         return $data;
     }
-    /**
-     * Сортирует данные
-     * @param  Sorter   $sorter объект сортировщика
-     * @param  mixed    $data   данные
-     * @return mixed            отсортированные данные
-     */
-    abstract protected function sort(Sorter $sorter, $data);
-    /**
-     * Разбивает данные на страницы
-     * @param  Paginator    $paginator  объект пагинатора
-     * @param  mixed        $data       данные
-     * @return mixed                    одна, указанная страница данных
-     */
-    abstract protected function division(Paginator $paginator, $data);
+
+    abstract protected function sort($data);
+
+    abstract protected function filter($data);
+
+    abstract protected function division($data);
+
+    abstract public function getTotalCount(): int;
 }

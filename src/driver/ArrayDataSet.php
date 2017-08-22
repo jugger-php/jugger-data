@@ -6,33 +6,44 @@ use jugger\data\Sorter;
 use jugger\data\DataSet;
 use jugger\data\Paginator;
 
-/**
- * Набор данных для массива
- */
 class ArrayDataSet extends DataSet
 {
-    protected function getInternalTotalCount($data)
+    protected function init()
     {
-        return count($data);
+        parent::init();
+        if (is_array($this->data)
+            || $this->data instanceof \ArrayAccess
+            && $this->data instanceof \Iterator
+            && $this->data instanceof \Countable
+        ) {
+            // is ok
+        }
+        else {
+            throw new \Exception("Property 'data' must be ARRAY type or implements '\ArrayAccess', '\Countable', '\Iterator' interfaces");
+        }
     }
 
-    protected function prepareData()
+    public function getTotalCount(): int
     {
-        // сбрасываем ключи
-        return array_values(parent::prepareData());
+        return count($this->data);
     }
 
-    protected function division(Paginator $paginator, $data)
+    protected function filter($data)
     {
-        $offset = $paginator->getOffset();
-        $limit = $paginator->getPageSize();
+        throw new \Exception("Filter not success");
+    }
+
+    protected function division($data)
+    {
+        $offset = $this->paginator->getOffset();
+        $limit = $this->paginator->getPageSize();
 
         return array_slice($data, $offset, $limit);
     }
 
-    protected function sort(Sorter $sorter, $data)
+    protected function sort($data)
     {
-        $columns = $sorter->getColumns();
+        $columns = $this->sorter->getColumns();
         usort($data, function($a, $b) use($columns) {
             $ret = 0;
             foreach ($columns as $column => $sort) {
@@ -47,7 +58,7 @@ class ArrayDataSet extends DataSet
         return $data;
     }
 
-    public function sortOperation($sort, $a, $b)
+    protected function sortOperation($sort, $a, $b)
     {
         $ret = 0;
         if (is_callable($sort)) {

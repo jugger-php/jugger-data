@@ -2,35 +2,30 @@
 
 namespace jugger\data;
 
-/**
- * пагинатор
- * хранит в себе информацию о разбивке данных на страницы
- */
 class Paginator
 {
-    /**
-     * текущая страница
-     * @var integer
-     */
-    public $pageNow;
-    /**
-     * количество элементов на странице
-     * @var integer
-     */
-    public $pageSize;
-    /**
-     * общее количество элементов
-     * @var integer
-     */
-    public $totalCount;
+    protected $pageNow;
+    protected $pageSize;
+    protected $totalCount;
 
-    public function __construct($pageSize, $pageNow = 1)
+    public function __construct(int $pageSize, int $totalCount, int $pageNow = 1)
     {
-        $this->pageNow = $pageNow;
         $this->pageSize = $pageSize;
+        $this->totalCount = $totalCount;
+        $this->pageNow = $pageNow;
     }
 
-    public function getOffset()
+    public function setPageNow(int $value)
+    {
+        $this->pageNow = $value;
+    }
+
+    public function getPageNow(): int
+    {
+        return $this->pageNow;
+    }
+
+    public function getOffset(): int
     {
         $p = (int) $this->pageNow;
         $pm = $this->getPageMax();
@@ -45,18 +40,19 @@ class Paginator
         return ($p - 1) * $this->getPageSize();
     }
 
-    public function getPageSize()
+    public function getTotalCount(): int
     {
-        return (int) $this->pageSize;
+        return $this->totalCount;
     }
 
-    public function getPageMax()
+    public function getPageSize(): int
     {
-        if (!$this->totalCount) {
-            throw new \Exception("Property 'totalCount' is required");
-        }
+        return $this->pageSize;
+    }
 
-        $t = (int) $this->totalCount;
+    public function getPageMax(): int
+    {
+        $t = $this->totalCount;
         $ps = $this->getPageSize();
 
         if ($t < $ps) {
