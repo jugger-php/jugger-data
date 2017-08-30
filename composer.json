@@ -1,12 +1,15 @@
 {
     "name": "jugger-php/jugger-data",
-    "autoload": {
-        "psr-4": {
-            "jugger\\data\\": "src/"
+    "description": "DataSet, Pagination and Sorting module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "irpsv",
+            "email": "i.rpsv@live.com"
         }
-    },
+    ],
     "require": {
-        "php": "^7.1",
-        "jugger\\criteria": "^1"
+        "php": "7.1.*",
+        "jugger-php/jugger-criteria": "1.*"
     }
 }
