@@ -5,6 +5,7 @@ namespace jugger\data\driver;
 use jugger\data\Sorter;
 use jugger\data\DataSet;
 use jugger\data\Paginator;
+use jugger\criteriaValidator\CriteriaValidator;
 
 class ArrayDataSet extends DataSet
 {
@@ -23,6 +24,13 @@ class ArrayDataSet extends DataSet
         }
     }
 
+    protected function prepareData(): array
+    {
+        return array_values(
+            parent::prepareData()
+        );
+    }
+
     public function getTotalCount(): int
     {
         return count($this->data);
@@ -30,7 +38,10 @@ class ArrayDataSet extends DataSet
 
     protected function filter($data)
     {
-        throw new \Exception("Filter not success");
+        $validator = new CriteriaValidator($this->criteria);
+        return array_filter($data, function($row) use($validator) {
+            return $validator->validate($row);
+        });
     }
 
     protected function division($data)

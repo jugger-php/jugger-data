@@ -28,7 +28,7 @@ class Sorter
         return $this->getColumns()[$name] ?? null;
     }
 
-    public function set(string $column, int $sort): void
+    public function set(string $column, $sort): void
     {
         $types = [
             self::ASC,
