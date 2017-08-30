@@ -10,6 +10,7 @@
     ],
     "require": {
         "php": "7.1.*",
-        "jugger-php/jugger-criteria": "1.*"
+        "jugger-php/jugger-criteria": "1.*",
+        "jugger-php/jugger-criteria-validator": "1.*"
     }
 }
